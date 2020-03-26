@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ReadingsController!{% endblock %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+{% block body %}
+    <h1>Hello</h1>
+    {{ form_start(form) }}
+    {{ form_row(form.titre,{"attr": {"placeholder" : "Le titre"}}) }}
+    {{ form_row(form.category) }}
+    {{ form_row(form.description,{"attr": {"placeholder" : "Une description"}}) }}
+    {{ form_row(form.author,{"attr": {"placeholder" : "L'auteur"}}) }}
+    <button class="btn btn-primary" type="submit">Enregistrer</button>
+    {{ form_end(form) }}
+
+{% endblock %}

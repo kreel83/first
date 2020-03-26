@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ReadingsController!{% endblock %}
+
+{% block body %}
+    <h1>{{  books | length }} books</h1>
+
+
+    <div class="content">
+        {% for book in books %}
+            {{  include('google/_abook.html.twig', {book: book.volumeInfo}) }}
+            <hr>
+
+        {% endfor %}
+    </div>
+
+{% endblock %}

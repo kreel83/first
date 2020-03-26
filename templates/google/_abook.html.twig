@@ -1,0 +1,31 @@
+<div class="row">
+    <col-2>
+        <p>
+            {% if book.imageLinks.thumbnail is defined %}
+            <img src="{{ book.imageLinks.thumbnail }}" alt="" width="100" height="150">
+            {%  endif %}
+        </p>
+    </col-2>
+    <div class="col-3">
+        <h6>{{ book.title }}</h6>
+        <p>
+            <ul>
+            {% if book.authors is defined %}
+                {% for author in book.authors %}
+                    <li>{{ author }}</li>
+                {%  endfor %}
+            {% endif %}
+        </ul>
+        </p>
+
+
+    </div>
+    <div class="col">
+        <p>
+            {% if book.description is defined %}
+                {{ book.description }}
+            {% endif %}
+        </p>
+
+    </div>
+</div>
