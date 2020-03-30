@@ -1,5 +1,5 @@
 # one
-after fit clone, got to the folder and fire :
+after git clone, got to the folder and fire :
 > composer install
 
 # two
