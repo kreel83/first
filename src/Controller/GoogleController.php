@@ -27,8 +27,17 @@ class GoogleController extends AbstractController
         $b = ["title" => "titre", "author" => "auteur", "description" => "description"];
         $query = "q=autant";
         $books = $this->recherhe($query);
-        dump($books->items);
-        return new \Symfony\Component\HttpFoundation\Response(json_encode($books->items));
+        $details = [];
+        foreach ($books->items as $key=>$book) {
+            $det = array();
+            $det['titre'] = $book->volumeInfo->title;
+            isset($book->volumeInfo->authors[0]) ? $det['author'] = $book->volumeInfo->authors[0] : $det['author'] = "";
+            isset($book->volumeInfo->description) ? $det['description'] = $book->volumeInfo->description : $det['description'] = "";
+            //$det['description'] = $book->volumeInfo->description;
+            array_push($details, $det);
+        }
+
+        return new \Symfony\Component\HttpFoundation\Response(json_encode($details));
     }
 
 

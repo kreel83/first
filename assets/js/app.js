@@ -17,34 +17,73 @@ import {modal} from './search';
 selectCategory();
 modal();
 
-
-
 import React from 'react';
-import ReactDom from 'react-dom';
-import TodoList from './components/todoList'
+import ReactDOM from 'react-dom';
 import Book from './components/book'
 
-const element = React.createElement(TodoList, {
-    likes: 4
-})
-ReactDom.render(element, document.getElementById('todo'));
+class App extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            'test' : 'coucou',
+            'books' : []
+        }
+
+    }
+
+
+    componentDidMount() {
+        this.setState({"test": "Coucou !"})
+        $.get({
+            url: '/google/ajax',
+            success: function (data) {
+
+                this.setState({"books": JSON.parse(data)})
+                console.log(this.state.books[0])
+            }.bind(this)
+        });
+    }
 
 
 
-const book = React.createElement(Book)
-document.querySelectorAll('.book').forEach((b)=> {
-    setState({
-        book.title = 'tt'
-    })
-    ReactDom.render(book, b)
-})
+
+    render() {
+
+            let bks = this.state.books
+            var liste = bks.map((book, i) => {
+                console.log(book)
+                return (
+                    <Book key={i} book={book}></Book>
+                )
+/*                return (
+                    <div className="row" key={i}>
+
+                    <div className="col-3" >
+                        <p>{book.titre}</p>
+                        <p>{book.auhor}</p>
+
+                    </div>
+                        <div className="col">
+                            <p>{book.description}</p>
+                        </div>
+                    </div>
+                )*/
+                })
+            return (
+            <div className="app">
+
+                <h1>{ this.state.test }</h1>
+                <div className="liste">
+                    {liste}
+                </div>
+
+            </div>)
+    }
+}
 
 
-
-
-
-
-
+const rootElement = document.getElementById('root')
+ReactDOM.render(<App />, rootElement)
 
 
 console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
