@@ -1,50 +1,34 @@
 import React from "react";
+import ReactDom from "react-dom";
 
 export default class Book extends React.Component {
-    constructor (props) {
-        super(props);
-        this.state = {
 
-            book: {
-                title: props.title,
-                author: props.author,
-                description: props.description
-
-            },
-            test: this.loadNotesFromServer()
-        }
+    constructor(props) {
+        super(props)
+        this.state = {isClick: false}
     }
 
-    components(b) {
-        console.log(b)
-
+    handleClick = () => {
+        this.setState(state => ({
+            isClick: !state.isClick
+        }))
     }
 
-    loadNotesFromServer() {
-        $.get({
-            url: '/google/ajax',
-            success: function (data) {
-                const datas = JSON.parse(data);
 
-                this.components(datas)
-
-            }.bind(this)
-        });
-    }
     render() {
-        return (<div className="row">
-            <div className="col-3">
-                <h6>{this.state.book.title}</h6>
-                <p>{this.state.book.author}</p>
+        return (
+            <div className="row">
+                <div className="col-3" >
+                    <p>{this.props.book.title}</p>
+                    <p>{this.props.book.author}</p>
+                </div>
+                <div className="col-8">
+                    <p>{this.props.book.description}</p>
+                </div>
+                <div className="col">
+                    <button className="btn btn-default" onClick={this.handleClick}>{(this.state.isClick) ? 'hide' : 'show' }</button>
+                </div>
             </div>
-            <div className="col-2">
-                {this.state.test}
-            </div>
-            <div className="col">
-                <p>
-                    {this.state.book.description}
-                </p>
-            </div>
-        </div>)
+        )
     }
 }
