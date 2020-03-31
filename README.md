@@ -11,7 +11,7 @@ modifiy the entry DATBASE_URL from .env file and adapt it to your msl connection
 
 # four
 fire migration
-> php bin/console doctrine:migration:migrate
+> php bin/console doctrine:migrations:migrate
 
 # five
 populize tables
