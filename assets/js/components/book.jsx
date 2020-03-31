@@ -17,9 +17,10 @@ export default class Book extends React.Component {
 
     render() {
         return (
+            <div>
             <div className="row">
                 <div className="col-3" >
-                    <p>{this.props.book.title}</p>
+                    <p>{this.props.book.titre}</p>
                     <p>{this.props.book.author}</p>
                 </div>
                 <div className="col-8">
@@ -28,6 +29,9 @@ export default class Book extends React.Component {
                 <div className="col">
                     <button className="btn btn-default" onClick={this.handleClick}>{(this.state.isClick) ? 'hide' : 'show' }</button>
                 </div>
+
+            </div>
+            <hr/>
             </div>
         )
     }
