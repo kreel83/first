@@ -105,6 +105,9 @@
     "egulias/email-validator": {
         "version": "2.1.17"
     },
+    "fabpot/goutte": {
+        "version": "v4.0.0"
+    },
     "fzaninotto/faker": {
         "version": "v1.9.1"
     },
@@ -116,9 +119,6 @@
     },
     "guzzlehttp/psr7": {
         "version": "1.6.1"
-    },
-    "jbarbin/googlebooksbundle": {
-        "version": "dev-master"
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"

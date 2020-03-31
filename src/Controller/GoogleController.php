@@ -3,20 +3,21 @@
 namespace App\Controller;
 
 
-use http\Env\Response;
+
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use JBarbin\GoogleBooksBundle\GoogleAPI\Query;
 
 class GoogleController extends AbstractController
 {
     /**
-     * @Route ("/", name="test")
+     * @Route ("/accueil", name="accueil")
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function test() {
-        return $this->render('test.html.twig');
+        return $this->render('accueil.html.twig');
     }
 
     /**
@@ -37,14 +38,14 @@ class GoogleController extends AbstractController
             array_push($details, $det);
         }
 
-        return new \Symfony\Component\HttpFoundation\Response(json_encode($details));
+        return new Response(json_encode($details));
     }
 
 
 
     private function recherhe($q) {
         $url = "https://www.googleapis.com/books/v1/volumes?$q&printType=books&projection=lite&maxResults=40&langRestrict=Fr";
-
+        dump($url);
         $b = file_get_contents($url);
         return json_decode($b);
     }
@@ -83,7 +84,7 @@ class GoogleController extends AbstractController
      */
     public function index()
     {
-        $query = "autant";
+        $query = "q=autant";
         $books = $this->recherhe($query);
 
         return $this->render('google/index.html.twig', [
