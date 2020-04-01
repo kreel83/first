@@ -10,7 +10,8 @@ then
 modifiy the entry DATBASE_URL from .env file and adapt it to your msl connection
 
 # four
-fire migration
+create database and fire migrations
+> php bin/console doctrine:database:create
 > php bin/console doctrine:migrations:migrate
 
 # five
