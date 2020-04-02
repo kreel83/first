@@ -12,12 +12,13 @@ import '../css/app.css';
 // import $ from 'jquery';
 
 import {selectCategory} from './book.js';
-import {modal, searchLivreAddict, navItems} from './search';
+import {modal, searchLivreAddict, navItems, livreParAuteur} from './search';
 
 selectCategory();
 modal();
 searchLivreAddict()
 navItems()
+livreParAuteur()
 
 
 

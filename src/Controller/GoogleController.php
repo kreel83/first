@@ -58,13 +58,32 @@ class GoogleController extends AbstractController
         $client = new Client();
         $url = "https://www.livraddict.com/search.php?t=$p";
         $crawler = $client->request('GET', $url);
-        $rr = $crawler->filter('.listing_recherche>li')->last()->extract("_text");
-        dump($rr);
+        $rr = $crawler->filter('#searchnav li')->first()->text();
+
         if ($rr == []) {
-            return 99;
+            return 999;
         }
-        return intval($rr[0]);
+        $match = array();
+        preg_match('/\d+/',$rr, $match);
+        //dump($match);
+        return intval($match[0]);
     }
+
+    /**
+     * @Route ("google/listeLivres", name="listeLivres")
+     * @param Request $request
+     * @return Response
+     */
+    public function listeLivre(Request $request) {
+        $url =  "https://livraddict.com".$request->request->get('link');
+        $client = new Client();
+        $crawler = $client->request('GET', $url);
+        $r = $crawler->filter('#bookAuthor>tbody>tr>td')->filter("a")->extract(array("_text","href"));
+        return new Response(json_encode([
+            'link' => $r
+        ]));
+    }
+
 
     /**
      * @Route("/google/rechercheLivreaddict/{titre}/{lapage}", name="rechercheLivraddict")
@@ -85,7 +104,6 @@ class GoogleController extends AbstractController
 
 
         $books = [];
-
         $nb = sizeof($r['lien']);
         for ($i = 0; $i < $nb; $i++) {
             $books[$i]['lien'] = $r['lien'][$i];
@@ -102,9 +120,17 @@ class GoogleController extends AbstractController
         for ($i = 0; $i < $nb; $i++) {
             $authors[$i]['nom'] = $a['nom'][$i];
             $authors[$i]['link'] = $a['link'][$i];
-        }
+            $url = "https://www.livraddict.com/".$a['link'][$i];
 
-        dump($authors);
+
+            $c = new Client();
+            $crawler = $c->request('GET', $url);
+            $authors[$i]['photo'] = $crawler->filter(".profile-userpic>img")->extract(array("src"));
+            ($authors[$i]['photo'] == []) ? $authors[$i]['photo'] = "none" : $authors[$i]['photo'] = $authors[$i]['photo'][0];
+
+        }
+        dump( $authors);
+
         return new Response(json_encode(["books" => $books, "authors" => $authors]));
     }
 
@@ -134,16 +160,17 @@ class GoogleController extends AbstractController
                 $books = $this->rechercheLivreaddict($r['titre'], 1);
                 $nb = $this->nb($r['titre']);
                 $books = json_decode($books->getContent());
-                dump($books);
+dump($books);
                 return $this->render('google/livreAddict.html.twig', [
                     'books' => $books->books,
                     'authors' => $books->authors,
-                    'nbpage' => $nb,
+                    'nblivres' => $nb,
+                    'nbpages' => (int) floor($nb/10) + 1,
                     'request' => $r
                 ]);
             }
         }
-        dump($books);
+
         return $this->render('google/search.html.twig', [
             'books' => $books,
             'request' => $r
