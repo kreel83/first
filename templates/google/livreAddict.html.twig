@@ -1,0 +1,177 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ReadingsController!{% endblock %}
+
+        {% block stylesheets %}
+            <style>
+                .nav-pills {
+                    color: darkseagreen;
+                    width: 100%;
+                }
+
+                .nav-pills li {
+                    padding: 10px 50px;
+                    border: 1px solid darkseagreen;
+                    width: 50%;
+                    text-align: center;
+                    cursor: pointer;
+                }
+
+                .nav-pills li:hover {
+
+                    color : white;
+                    background-color: #18BC9C;
+
+                }
+
+            </style>
+        {% endblock %}
+
+
+{% block body %}
+    <h1>recherche</h1>
+    <form action="search" method="post">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="titre" id="titre"
+                   name="titre" {% if request['titre'] is defined %} value="{{ request['titre'] }} {% endif %}">
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="titreParams" id="b1" value="b1" checked>
+            <label class="form-check-label" for="b1">complet</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="titreParams" id="b2" value="b2">
+            <label class="form-check-label" for="b2">partiel</label>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="auteur"
+                   name="auteur" {% if request['auteur'] is defined %} value="{{ request['auteur'] }} {% endif %}">
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="auteurParams" id="a1" value="a1" checked>
+            <label class="form-check-label" for="a1">complet</label>
+        </div>
+
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="auteurParams" id="a2" value="a2">
+            <label class="form-check-label" for="a2">partiel</label>
+        </div>
+
+        <div class="form-group mt-4">
+            <button class="btn btn-dark" type="submit" name="valide" value="google">chercher !</button>
+            <button class="btn btn-success" type="submit" name="valide" value="livraddict">livraddict !</button>
+
+        </div>
+    </form>
+
+    <ul class="nav nav-pills">
+
+        <li class="active" id="livre_tab">Livres</li>
+        <li  id="auteur_tab">Auteurs ({{ authors | length }})</li>
+
+    </ul>
+
+    <div class="tab-content">
+
+        <div data-id="livre_tab" class="tab-pane fade show active">
+
+
+
+
+            <nav aria-label="Page navigation example" id="pagination">
+                <ul class="pagination">
+
+                    <li class="page-item" data-position="previous" hidden><a class="page-link" href="#">Previous</a></li>
+                    {% if (nbpage != 99) and (nbpage !=0) %}
+                        {% for nb in 1..nbpage %}
+
+                            {% if nb == 1 %}
+                                <li class="page-item active" data-position="{{ nb }}"><a class="page-link" href="#">{{ nb }}</a></li>
+                            {% else %}
+                                <li class="page-item" data-position="{{ nb }}"><a class="page-link" href="#">{{ nb }}</a></li>
+                            {% endif %}
+
+
+                        {% endfor %}
+
+
+                        <li class="page-item" data-position="next"><a class="page-link" href="#">Next</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+            <div class="content mt-4 d-flex flex-wrap justify-content-center"
+                 style="padding: 30px;border: 1px solid black; height: auto; border-radius: 15px">
+
+                {% for book in books %}
+
+                    <div class="card" style="width: 200px;font-size: 0.8rem;margin: 10px;padding: 0; cursor:pointer;">
+                        <div class="card-body d-flex justify-content-center">
+                            <img src="{{ book.photo }}" alt="" width="80" height="125">
+                        </div>
+                        <div class="card-footer">
+                            {{ book.lien }}
+                        </div>
+                        <div class="card-footer">
+                            <p>{{ book.genre }}</p>
+                            [<em>
+                                {{ book.auteur }}
+                            </em>]
+                        </div>
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+        <div  data-id="auteur_tab" class="tab-pane fade">
+<ul style="color: blue">
+            {% for auteur in authors %}
+                <li style="color: #000;"><a href="{{ auteur.link }}">{{ auteur.nom }}</a></li>
+            {% endfor %}
+</ul>
+        </div>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">action</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <button class="btn btn-primary mb-2 d-block w-100">Ajouter à la Wish list</button>
+                    <br>
+                    <button class="btn btn-outline-primary mb-2 d-block w-100">Ajouter aux lectures actuelles</button>
+                    <br>
+                    <button class="btn btn-primary mb-2 d-block w-100">Ajouter à la liste de lecture</button>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary">Retour</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
