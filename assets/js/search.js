@@ -1,6 +1,8 @@
 const modal = () => {
-    $('.card_livre').click(() => {
-        $('.modalParLivre').modal('toggle')
+    $('.tab-content').on('click','.card_livre',function() {
+        let slug = '/livre/'+$(this).attr('data-slug')
+        slug = slug.split(' ').join('-')
+        window.location = slug
     })
 }
 
@@ -23,10 +25,8 @@ const livreParAuteur = () => {
                     } else {
                         data = `<h5>${d[i][0]}</h5>`
                     }
-
                     $('.body-livres').append(data)
                 }
-
             }
         })
         $('.livreParAuteur').modal('toggle')
@@ -86,7 +86,7 @@ const searchLivreAddict = () => {
                 const books = JSON.parse(data);
                 $('.content').empty()
                 for (let i = 0; i < books.books.length; i++) {
-                    const book = `<div class="card"
+                    const book = `<div class="card card_livre" data-slug="${books.books[i]['titre']}"
                          style="width: 200px;font-size: 0.8rem;margin: 10px;padding: 0; cursor:pointer;">
                         <div class="card-body d-flex justify-content-center">
                             <img src="${books.books[i]['photo']}" alt="" width="80" height="125">
