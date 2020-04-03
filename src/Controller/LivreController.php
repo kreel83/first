@@ -37,10 +37,16 @@ class LivreController extends AbstractController
         $crawler = $client->request('GET', $url);
         $params = array();
         $params['description'] = $this->treat($crawler->filter('#synopsis')->extract(array("_text")));
-        $params['couverture'] = $crawler->filter('.couvertureLivre>img')->extract(array("src"))[0];
+
         $params['genre'] = $crawler->filter('.sidebar-tags>li')->first()->filter('a')->extract(array("_text"))[0];
         $params['auteur'] = $crawler->filter('.page-title>a')->text();
-        $param = $crawler->filter('.editionBlock')->first()->filter(".editionBlock_infos>p")->text();
+        $param = $crawler->filter(".editionBlock>.editionBlock_infos>p")->extract(array('_text'));
+        $i = -1;
+        do {
+            $i++;
+        } while (strpos($param[$i],'min') !== false );
+        $param = $crawler->filter(".editionBlock>.editionBlock_infos>p")->eq($i)->text();
+        $params['couverture'] = $crawler->filter('.editionBlock>.editionBlock_cover>a')->eq($i)->extract(array("href"))[0];
         $exp = explode(' | ',$param);
         $params['isbn'] ="";
         $params['pages'] ="";
