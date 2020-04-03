@@ -102,10 +102,10 @@ class GoogleController extends AbstractController
         $r['auteur'] = $rr->filter('.item_infos>p>a')->extract("_text");
         $r['genre'] = $rr->filter('.item_infos>.genre')->extract("_text");
 
-
         $books = [];
         $nb = sizeof($r['lien']);
         for ($i = 0; $i < $nb; $i++) {
+            $books[$i]['titre'] = str_replace('-',' ',str_replace('.html','',explode('/',$r['lien'][$i])[3]));
             $books[$i]['lien'] = $r['lien'][$i];
             $books[$i]['photo'] = $r['photo'][$i];
             $books[$i]['auteur'] = $r['auteur'][$i];
@@ -121,13 +121,10 @@ class GoogleController extends AbstractController
             $authors[$i]['nom'] = $a['nom'][$i];
             $authors[$i]['link'] = $a['link'][$i];
             $url = "https://www.livraddict.com/".$a['link'][$i];
-
-
             $c = new Client();
             $crawler = $c->request('GET', $url);
             $authors[$i]['photo'] = $crawler->filter(".profile-userpic>img")->extract(array("src"));
             ($authors[$i]['photo'] == []) ? $authors[$i]['photo'] = "none" : $authors[$i]['photo'] = $authors[$i]['photo'][0];
-
         }
         dump( $authors);
 
