@@ -21,7 +21,7 @@ const livreParAuteur = () => {
                     //console.log(data.link[i][0])
                     let data = ""
                     if (d[i][1].includes('livre')) {
-                        data = `<li><a href="${d[i][1]}">${d[i][0]}</a></li>`
+                        data = `<li><a href="${ d[i][1].replace('/biblio','').replace('.html','') }">${d[i][0]}</a></li>`
                     } else {
                         data = `<h5>${d[i][0]}</h5>`
                     }
