@@ -1,0 +1,13 @@
+.book {
+    margin-top: 100px;
+    background-color: #fff;
+    padding: 16px;
+}
+
+.titre {
+    font-size: 2rem;
+}
+
+.details {
+    text-align: center;
+}

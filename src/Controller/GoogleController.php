@@ -39,35 +39,10 @@ class GoogleController extends AbstractController
             //$det['description'] = $book->volumeInfo->description;
             array_push($details, $det);
         }
-
         return new Response(json_encode($details));
     }
 
 
-    private function recherche($q)
-    {
-        $url = "https://www.googleapis.com/books/v1/volumes?$q&printType=books&projection=lite&maxResults=40&langRestrict=Fr";
-
-        $b = file_get_contents($url);
-        return json_decode($b);
-    }
-
-
-    private function nb($p)
-    {
-        $client = new Client();
-        $url = "https://www.livraddict.com/search.php?t=$p";
-        $crawler = $client->request('GET', $url);
-        $rr = $crawler->filter('#searchnav li')->first()->text();
-
-        if ($rr == []) {
-            return 999;
-        }
-        $match = array();
-        preg_match('/\d+/',$rr, $match);
-        //dump($match);
-        return intval($match[0]);
-    }
 
     /**
      * @Route ("google/listeLivres", name="listeLivres")
@@ -127,7 +102,6 @@ class GoogleController extends AbstractController
             ($authors[$i]['photo'] == []) ? $authors[$i]['photo'] = "none" : $authors[$i]['photo'] = $authors[$i]['photo'][0];
         }
         dump( $authors);
-
         return new Response(json_encode(["books" => $books, "authors" => $authors]));
     }
 
@@ -153,13 +127,12 @@ class GoogleController extends AbstractController
             if ($request->request->get('valide') == "google") {
                 $books = $this->recherche($urlParams);
             } else {
-
                 $books = $this->rechercheLivreaddict($r['titre'], 1);
                 $nb = $this->nb($r['titre']);
                 $books = json_decode($books->getContent());
-dump($books);
+                dump($books);
                 return $this->render('google/livreAddict.html.twig', [
-                    'books' => $books->books,
+                    'books' => json_encode($books->books),
                     'authors' => $books->authors,
                     'nblivres' => $nb,
                     'nbpages' => (int) floor($nb/10) + 1,
@@ -182,10 +155,34 @@ dump($books);
     {
         $query = "q=autant";
         $books = $this->recherche($query);
-
         return $this->render('google/index.html.twig', [
             'controller_name' => 'GoogleController',
             'books' => $books->items
         ]);
     }
+
+
+    private function recherche($q)
+    {
+        $url = "https://www.googleapis.com/books/v1/volumes?$q&printType=books&projection=lite&maxResults=40&langRestrict=Fr";
+        $b = file_get_contents($url);
+        return json_decode($b);
+    }
+
+
+    private function nb($p)
+    {
+        $client = new Client();
+        $url = "https://www.livraddict.com/search.php?t=$p";
+        $crawler = $client->request('GET', $url);
+        $rr = $crawler->filter('#searchnav li')->first()->text();
+        if ($rr == []) {
+            return 999;
+        }
+        $match = array();
+        preg_match('/\d+/',$rr, $match);
+        //dump($match);
+        return intval($match[0]);
+    }
+
 }

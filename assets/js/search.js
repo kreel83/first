@@ -1,6 +1,6 @@
 const modal = () => {
     $('.tab-content').on('click','.card_livre',function() {
-        let slug = '/livre/'+$(this).attr('data-slug')
+        let slug = '/display/'+$(this).attr('data-slug')
         slug = slug.split(' ').join('-')
         window.location = slug
     })

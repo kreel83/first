@@ -1,0 +1,29 @@
+.nav-pills {
+    color: darkseagreen;
+    width: 100%;
+}
+
+.nav-pills li {
+    padding: 10px 50px;
+    border: 1px solid darkseagreen;
+    width: 50%;
+    text-align: center;
+    cursor: pointer;
+}
+
+.nav-pills li:hover, .nav-pills li.active {
+
+    color: white;
+    background-color: #18BC9C;
+
+}
+
+.bookCard {
+    width: 200px;font-size: 0.8rem;margin: 10px;padding: 0; cursor:pointer;
+}
+
+.tab-pane {
+    display: flex;
+    flex-wrap: wrap;
+
+}
