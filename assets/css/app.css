@@ -1,3 +1,7 @@
+@import "./book/book.css";
+@import "./search/onglets_search.css";
+
 body {
     background-color: lightgray;
 }
+

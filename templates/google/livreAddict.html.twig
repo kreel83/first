@@ -2,30 +2,7 @@
 
 {% block title %}Hello ReadingsController!{% endblock %}
 
-        {% block stylesheets %}
-            <style>
-                .nav-pills {
-                    color: darkseagreen;
-                    width: 100%;
-                }
 
-                .nav-pills li {
-                    padding: 10px 50px;
-                    border: 1px solid darkseagreen;
-                    width: 50%;
-                    text-align: center;
-                    cursor: pointer;
-                }
-
-                .nav-pills li:hover, .nav-pills li.active {
-
-                    color: white;
-                    background-color: #18BC9C;
-
-                }
-
-            </style>
-        {% endblock %}
 
 
 {% block body %}
@@ -67,6 +44,12 @@
 
         </div>
     </form>
+
+    <div id="react_livre_tab" data-books="{{ books }}" data-pagination="{{ nblivres }}"></div>
+
+
+
+
 
     <ul class="nav nav-pills">
 

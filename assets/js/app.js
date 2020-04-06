@@ -27,12 +27,30 @@ livreParAuteur()
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/app'
-import Book from './components/book'
+import Livre from './components/livre'
+import SearchPage from './components/searchPage/searchPage'
 
 
 
-const rootElement = document.getElementById('root')
-ReactDOM.render(<App />, rootElement)
+
+//const rootElement = document.getElementById('root')
+//ReactDOM.render(<App />, rootElement)
+const livreTab = document.getElementById('react_livre_tab')
+if (livreTab) {
+    let books = $('#react_livre_tab').attr('data-books')
+    const pagination = $('#react_livre_tab').attr('data-pagination')
+    books = JSON.parse(books);
+    console.log(books)
+    ReactDOM.render(<SearchPage books={books} pagination={pagination}/>, livreTab);
+}
+
+const livreElement = document.getElementById('livre')
+if (livreElement) {
+    const slug = $('#livre').attr('data-slug')
+    console.log(slug)
+    ReactDOM.render(<Livre slug={slug}/>, livreElement)
+}
+
 
 
 
