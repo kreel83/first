@@ -53,15 +53,14 @@ class LivreController extends AbstractController
     }
 
 
-
-
     private function recherche($q)
     {
         $url = "https://www.googleapis.com/books/v1/volumes?$q&printType=books&projection=lite&maxResults=40&langRestrict=Fr";
-
         $b = file_get_contents($url);
         return json_decode($b);
     }
+
+
 
     private function treat($r) {
         $a = preg_split('/\n/', $r[0]);

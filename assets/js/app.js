@@ -39,9 +39,10 @@ const livreTab = document.getElementById('react_livre_tab')
 if (livreTab) {
     let books = $('#react_livre_tab').attr('data-books')
     const pagination = $('#react_livre_tab').attr('data-pagination')
+    const search = $('#titre').val()
     books = JSON.parse(books);
-    console.log(books)
-    ReactDOM.render(<SearchPage books={books} pagination={pagination}/>, livreTab);
+
+    ReactDOM.render(<SearchPage search={search} />, livreTab);
 }
 
 const livreElement = document.getElementById('livre')

@@ -102,7 +102,7 @@ class GoogleController extends AbstractController
             ($authors[$i]['photo'] == []) ? $authors[$i]['photo'] = "none" : $authors[$i]['photo'] = $authors[$i]['photo'][0];
         }
         dump( $authors);
-        return new Response(json_encode(["books" => $books, "authors" => $authors]));
+        return new Response(json_encode(["books" => $books, "authors" => $authors, "nbBook" => $this->nb($titre)]));
     }
 
     /**
