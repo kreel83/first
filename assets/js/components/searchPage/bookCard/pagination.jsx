@@ -1,39 +1,30 @@
 import React from 'React';
+import ElementPagination from './elementPagination.jsx'
 
 export default class Pagination extends React.Component{
     constructor(props) {
         super(props)
         this.pages = props.pages
-        this.state = {
-            nbPage : 0
-        }
+        this.search = props.search
+        console.log(this.pages)
     }
 
-    componentDidMount() {
-        this.setState({nbPage : Math.trunc(this.props.pages / 10) + 1});
-    }
-
-    handleClick = () => {
-        console.log('click')
-    }
 
 
     create() {
-        let pages =  `<li class="page-item" data-position="previous"><a class="page-link" href="#">Previous</a></li>`
-        for (let nb=1; nb<=this.state.nbPage; nb++) {
-            pages += `
-           <li class="page-item" data-position="${nb}"><a class="page-link" href="#" onclick="this.handleClick()" >${nb}</a></li>
-            `
+        let pages =  []
+        for (let nb=1; nb<=Math.trunc(this.props.pages / 10) + 1; nb++) {
+            pages.push(<ElementPagination key={nb} page={nb} search={this.props.search} />)
         }
-        return pages+ `<li class="page-item" data-position="next"><a class="page-link" href="#">Next</a></li>`
+        //console.log(this.state.nbPage)
+    return pages;
     }
     render() {
-
         return (<nav aria-label="Page navigation example" className="mt-4 d-flex justify-content-center" id="pagination">
-            <ul className="pagination" dangerouslySetInnerHTML={{ __html: this.create()}}>
-
-
-
+            <ul className="pagination">
+                <li className="page-item" data-position="previous"><a className="page-link" href="#">Previous</a></li>
+                { this.create() }
+                <li className="page-item" data-position="next"><a className="page-link" href="#">Next</a></li>
             </ul>
         </nav>)
     }
