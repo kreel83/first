@@ -26,13 +26,14 @@ livreParAuteur()
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/app'
+//import App from './components/app'
 import Livre from './components/livre'
 import SearchPage from './components/searchPage/searchPage'
+//import {createStore} from 'redux'
+//import Display from './test'
 
 
-
-
+//let store = createStore(reducer)
 //const rootElement = document.getElementById('root')
 //ReactDOM.render(<App />, rootElement)
 const livreTab = document.getElementById('react_livre_tab')
@@ -42,7 +43,8 @@ if (livreTab) {
     const search = $('#titre').val()
     books = JSON.parse(books);
 
-    ReactDOM.render(<SearchPage search={search} />, livreTab);
+    //ReactDOM.render(<Display search={search} page={1} />, livreTab)
+    ReactDOM.render(<SearchPage search={search} page={1} />, livreTab);
 }
 
 const livreElement = document.getElementById('livre')
