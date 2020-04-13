@@ -17,7 +17,7 @@ class Lecture
     private $id;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $debutLecture;
 
@@ -27,7 +27,7 @@ class Lecture
     private $finLecture;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $statut;
 
@@ -46,23 +46,19 @@ class Lecture
      */
     private $decouverte;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Categorie")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $categorie_id;
+
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $user_id;
+    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Livre")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $livre_id;
+    private $livre;
 
     public function getId(): ?int
     {
@@ -141,38 +137,28 @@ class Lecture
         return $this;
     }
 
-    public function getCategorieId(): ?Categorie
+
+
+    public function getUser(): ?User
     {
-        return $this->categorie_id;
+        return $this->user;
     }
 
-    public function setCategorieId(?Categorie $categorie_id): self
+    public function setUserId(?User $user): self
     {
-        $this->categorie_id = $categorie_id;
+        $this->user = $user;
 
         return $this;
     }
 
-    public function getUserId(): ?User
+    public function getLivre(): ?Livre
     {
-        return $this->user_id;
+        return $this->livre;
     }
 
-    public function setUserId(?User $user_id): self
+    public function setLivreId(?Livre $livre): self
     {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
-    public function getLivreId(): ?Livre
-    {
-        return $this->livre_id;
-    }
-
-    public function setLivreId(?Livre $livre_id): self
-    {
-        $this->livre_id = $livre_id;
+        $this->livre = $livre;
 
         return $this;
     }

@@ -12,8 +12,15 @@ import '../css/app.css';
 // import $ from 'jquery';
 
 import {selectCategory} from './book.js';
+import {selectLA} from './mapage.js';
+import {goToSelectedDiv, setMdoal} from './display';
 import {modal, searchLivreAddict, navItems, livreParAuteur} from './search';
 
+
+
+selectLA()
+setMdoal()
+goToSelectedDiv();
 selectCategory();
 modal();
 searchLivreAddict()
@@ -24,6 +31,7 @@ livreParAuteur()
 
 
 
+/*
 import React from 'react';
 import ReactDOM from 'react-dom';
 //import App from './components/app'
@@ -53,6 +61,7 @@ if (livreElement) {
     console.log(slug)
     ReactDOM.render(<Livre slug={slug}/>, livreElement)
 }
+*/
 
 
 

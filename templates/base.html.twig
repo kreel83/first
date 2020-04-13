@@ -32,7 +32,12 @@
                 </li>
 
             </ul>
+            <form action="/google/searchMyTable" method="post" class="form-inline my-2 my-lg-0">
 
+                <input type="text" class="form-control mr-sm-2" placeholder="chercher"
+                       name="titre" {% if request['titre'] is defined %} value="{{ request['titre'] }} {% endif %}">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit" name="valide" value="livraddict">Chercher</button>
+            </form>
         </div>
     </nav>
     <div class="container">

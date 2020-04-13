@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LivreController!{% endblock %}
+
+{% block body %}
+    <div class="book">
+        <input type="hidden" id="id" value="{{ lecture.id }}">
+        <div class="categorie">
+            {{ lecture.livre.genre }}
+        </div>
+        <hr/>
+        <div class="titre">
+            <strong>{{ lecture.livre.titre }}</strong>
+            <p>
+                {{ lecture.livre.auteur.nom }}
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ lecture.livre.imageurl }}" alt="" width="250px">
+            </div>
+
+            <div class="col-md-6">
+                <form action="/reading/save_note" method="post">
+                    <input type="hidden" name="id" value="{{ lecture.id }}">
+                    Les notes
+
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Valider</button>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+{% endblock %}
+

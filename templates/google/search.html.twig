@@ -21,7 +21,8 @@
         <hr>
 
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="auteur" name="auteur" {% if request['auteur'] is defined %} value="{{ request['auteur'] }} {% endif %}">
+            <input type="text" class="form-control" placeholder="auteur"
+                   name="auteur" {% if request['auteur'] is defined %} value="{{ request['auteur'] }} {% endif %}">
         </div>
 
         <div class="form-check form-check-inline">
@@ -41,33 +42,35 @@
         </div>
     </form>
 
-    <div class="content mt-4 d-flex flex-wrap justify-content-center" style="padding: 30px;border: 1px solid black; height: auto; border-radius: 15px" >
+    <div class="content mt-4 d-flex flex-wrap justify-content-center"
+         style="padding: 30px;border: 1px solid black; height: auto; border-radius: 15px">
         {% if (books.items is defined) %}
             {% for book in books.items %}
                 {% if (book.volumeInfo.imageLinks.thumbnail is defined) and (book.volumeInfo.authors is defined) and (book.volumeInfo.title is defined) %}
-    <div class="card" style="width: 200px;font-size: 0.8rem;margin: 10px;padding: 0; cursor:pointer;" data-donnees="[{{  book.id }},{{  book.volumeInfo.title }},{{  book.volumeInfo.authors | join(', ')}},{{ book.volumeInfo.imageLinks.thumbnail }}]">
-    <div class="card-body d-flex justify-content-center">
-        <img src="{{ book.volumeInfo.imageLinks.thumbnail }}" alt="" width="80" height="125">
-    </div>
-    <div class="card-footer">
-        {{ book.volumeInfo.title }}
-    </div>
-    <div class="card-footer">
-        [<em>
-            {% if book.volumeInfo.authors is defined %}
-                {% for author in book.volumeInfo.authors %}
-                {%  if book.volumeInfo.authors | join(',') | length < 20 %}
-                    {{  author }}
+                    <div class="card" style="width: 200px;font-size: 0.8rem;margin: 10px;padding: 0; cursor:pointer;"
+                         data-donnees="[{{ book.id }},{{ book.volumeInfo.title }},{{ book.volumeInfo.authors | join(', ') }},{{ book.volumeInfo.imageLinks.thumbnail }}]">
+                        <div class="card-body d-flex justify-content-center">
+                            <img src="{{ book.volumeInfo.imageLinks.thumbnail }}" alt="" width="80" height="125">
+                        </div>
+                        <div class="card-footer">
+                            {{ book.volumeInfo.title }}
+                        </div>
+                        <div class="card-footer">
+                            [<em>
+                                {% if book.volumeInfo.authors is defined %}
+                                    {% for author in book.volumeInfo.authors %}
+                                        {% if book.volumeInfo.authors | join(',') | length < 20 %}
+                                            {{ author }}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </em>]
+                        </div>
+                    </div>
+
+
+
                 {% endif %}
-                {% endfor %}
-            {%  endif %}
-        </em>]
-    </div>
-</div>
-
-
-
-                {%  endif %}
             {% endfor %}
         {% endif %}
     </div>

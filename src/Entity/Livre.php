@@ -21,10 +21,7 @@ class Livre
      */
     private $titre;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $auteur;
+
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -46,6 +43,17 @@ class Livre
      */
     private $isbn;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $genre;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Auteur", inversedBy="livres")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $auteur;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -63,17 +71,7 @@ class Livre
         return $this;
     }
 
-    public function getAuteur(): ?string
-    {
-        return $this->auteur;
-    }
 
-    public function setAuteur(string $auteur): self
-    {
-        $this->auteur = $auteur;
-
-        return $this;
-    }
 
     public function getDescription(): ?string
     {
@@ -119,6 +117,30 @@ class Livre
     public function setIsbn(?string $isbn): self
     {
         $this->isbn = $isbn;
+
+        return $this;
+    }
+
+    public function getGenre(): ?string
+    {
+        return $this->genre;
+    }
+
+    public function setGenre(string $genre): self
+    {
+        $this->genre = $genre;
+
+        return $this;
+    }
+
+    public function getAuteur(): ?Auteur
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(?Auteur $auteur): self
+    {
+        $this->auteur = $auteur;
 
         return $this;
     }

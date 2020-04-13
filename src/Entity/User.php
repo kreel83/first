@@ -57,7 +57,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $confirmed;
+    private $confirmed = false;
 
     public function getId(): ?int
     {

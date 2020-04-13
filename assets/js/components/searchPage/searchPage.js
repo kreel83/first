@@ -46,18 +46,21 @@ export default class SearchPage extends React.Component {
             })
     }
 
-    showLivre =() => {
+    showLivre = () => {
         $('.nav-pills li').removeClass('active')
         $('#livre_tab').addClass('active')
         $("div[data-id='auteur_tab']").removeClass('show active')
         $("div[data-id='livre_tab']").addClass('show active')
     }
 
-    showAuteur =() => {
+    showAuteur = () => {
         $('.nav-pills li').removeClass('active')
         $('#auteur_tab').addClass('active')
         $("div[data-id='livre_tab']").removeClass('show active')
         $("div[data-id='auteur_tab']").addClass('show active')
+        $(".les_livres").empty()
+        $('.les_auteurs .card').show()
+
     }
 
     componentDidMount() {
@@ -82,7 +85,7 @@ export default class SearchPage extends React.Component {
 
                 <div className="tab-content">
 
-                    <div data-id="livre_tab" className="tab-pane fade show active" >
+                    <div data-id="livre_tab" className="tab-pane fade show active">
 
 
                         <Pagination pages={this.state.nbBook} search={this.props.search} page={this.page}
@@ -93,9 +96,19 @@ export default class SearchPage extends React.Component {
 
 
                     </div>
-                    <div data-id="auteur_tab" className="tab-pane fade d-flex justify-content-center flex-wrap">
+                    <div data-id="auteur_tab" className="tab-pane fade d-flex flex-column">
+                        <div className="row">
+                            <div className="col-md-6 d-flex flex-wrap align-content-start">
+                                <div className="les_auteurs d-flex justify-content-center flex-wrap">
+                                    {listeAuteurs}
+                                </div>
+                            </div>
+                            <div className="col-md-6">
+                                <div className="les_livres d-flex justify-content-center flex-wrap">
 
-                        { listeAuteurs }
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

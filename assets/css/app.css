@@ -1,5 +1,7 @@
 @import "./book/book.css";
+@import "./authors/author.css";
 @import "./search/onglets_search.css";
+@import "./affiche_livre/affiche.css";
 
 body {
     background-color: lightgray;

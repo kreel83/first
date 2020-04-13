@@ -3,16 +3,38 @@
 namespace App\DataFixtures;
 
 use App\Entity\Book;
+use App\Entity\Categorie;
 use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
+use Goutte\Client;
 
 class AppFixtures extends BaseFixture
 {
     public function load(ObjectManager $manager)
     {
-        $faker = Factory::create();
+
+        $client = new Client();
+        $crawler = $client->request('GET', "https://www.livraddict.com/biblio/toplivres.php?g=Romans&year=&nbrevotes=100");
+        $rr = $crawler->filter('#filtre_genre>option')->extract(array('value'));
+        $rr = array_unique($rr);
+
+        asort($rr);
+        $rr = array_filter($rr, function ($el) {
+            return  $el!="";
+        });
+        foreach ($rr as $r) {
+            $categorie = new Categorie();
+            $categorie->setNom($r);
+            $categorie->setCouleur("");
+            $manager->persist($categorie);
+        }
+        $manager->flush();
+        $cat = new Categorie();
+
+/*        $faker = Factory::create();
         // $product = new Product();
         // $manager->persist($product);
 
@@ -29,8 +51,8 @@ class AppFixtures extends BaseFixture
                 $book->setAuthor($faker->name);
                 $book->setCategory($cat);
                 $manager->persist($book);
-            }
-        }
-        $manager->flush();
+          yes  }
+        }*/
+        //$manager->flush();
     }
 }

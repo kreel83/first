@@ -10,47 +10,147 @@
     <form action="search" method="post">
         <div class="form-group">
             <input type="text" class="form-control" placeholder="titre" id="titre"
-                   name="titre" {% if request['titre'] is defined %} value="{{ request['titre'] }} {% endif %}">
+                   name="titre" value="{{ requete }}">
         </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="titreParams" id="b1" value="b1" checked>
-            <label class="form-check-label" for="b1">complet</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="titreParams" id="b2" value="b2">
-            <label class="form-check-label" for="b2">partiel</label>
-        </div>
+{#        <div class="form-group">
+            <select name="genre" id="" class="form-control">
+                {%  for c in cat %}
+                    <option value="{{c.id}}">{{ c.nom }}</option>
+                {%  endfor %}
 
-        <hr>
-
-        <div class="form-group">
-            <input type="text" class="form-control" placeholder="auteur"
-                   name="auteur" {% if request['auteur'] is defined %} value="{{ request['auteur'] }} {% endif %}">
-        </div>
-
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="auteurParams" id="a1" value="a1" checked>
-            <label class="form-check-label" for="a1">complet</label>
-        </div>
-
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="auteurParams" id="a2" value="a2">
-            <label class="form-check-label" for="a2">partiel</label>
-        </div>
+            </select>
+        </div>#}
 
         <div class="form-group mt-4">
-            <button class="btn btn-dark" type="submit" name="valide" value="google">chercher !</button>
-            <button class="btn btn-success" type="submit" name="valide" value="livraddict">livraddict !</button>
+
+            <button class="btn btn-success" type="submit" name="valide" value="livraddict">Recherche avancée</button>
 
         </div>
     </form>
 
-    <div id="react_livre_tab" data-books="{{ books }}" data-pagination="{{ nblivres }}"></div>
+    {#<div id="react_livre_tab" data-books="{{ books }}" data-pagination="{{ nblivres }}"></div>#}
+    <div>
+        <ul class="nav nav-pills">
+
+            <li class="active" id="livre_tab">Livres({{ nblivres }})</li>
+            <li id="auteur_tab">Auteurs({{ authors | length }})</li>
+
+        </ul>
+
+        <div class="tab-content">
+
+            <div data-id="livre_tab" class="tab-pane fade show active">
+
+
+                {% if nbpages >1 %}
+
+                    <nav aria-label="Page navigation example" class="mt-4 d-flex justify-content-center flex-wrap"
+                         id="pagination">
+                        <ul class="pagination d-flex flex-wrap">
+                            <li class="page-item" data-position="previous"><a class="page-link" href="#">Previous</a>
+                            </li>
+                            {% for i in 1..nbpages %}
+                                <li class="page-item" data-position="{{ i }}"><a class="page-link" href="#">{{ i }}</a>
+                                </li>
+                            {% endfor %}
+                            <li class="page-item" data-position="next"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+
+                {% endif %}
+                <div class="listeLivre d-flex flex-wrap">
+                    {%  if books == [] %}
+                        <h2  class="mt-4 text-center">Aucun livre trouvé</h2>
+                    {%  else %}
+                    {% for book in books %}
+
+                            <div class="card card_livre" data-slug="{{ book.titre }}"
+                                 style="width: 200px;font-size: 0.8rem;margin: 10px;padding: 0; cursor:pointer;">
+                                <div class="card-header">
+                                    {{ book.genre }}
+                                </div>
+                                <div class="card-body">
+                                    <img src="{{ book.imageurl }}" alt="" width="125">
+                                    <p>{{ book.titre }}</p>
+                                </div>
+                                <div class="card-footer">
+                                    {% if book.auteur.nom is not defined %}
+                                    {{ book.auteur }}
+                                    {%  else %}
+                                    {{ book.auteur.nom }}
+                                        {% endif %}
+                                </div>
+                            </div>
+
+
+
+                    {% endfor %}
+                    {%  endif %}
+                </div>
+
+
+            </div>
+            <div data-id="auteur_tab" class="tab-pane fade d-flex flex-column">
+                <div class="row">
+
+                    {%  if authors == [] %}
+                    <h2 class="mt-4 text-center">Aucun auteur trouvé</h2>
+                    {%  else %}
+                    {% for auteur in authors %}
+
+                            <div class="card card_auteur"
+                                 style="width: 200px;font-size: 0.8rem;margin: 10px;padding: 0; cursor:pointer;" data-link="{{ auteur.link }}">
+
+                                <div class="card-body">
+                                    {% if auteur.photo == "none" %}
+                                        <img src="{{ asset('/img/avatar.png') }}" width="125" alt=""/>
+                                    {% else %}
+                                        <img src="{{ auteur.photo }}" alt="" width="125"/>
+                                    {% endif %}
+
+                                </div>
+                                <div class="card-footer">
+                                    {{ auteur.auteur }}
+                                </div>
+                            </div>
+
+
+
+                    {% endfor %}
+                    {%  endif %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 
 
 
 
 
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="auteurs_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body body-livres">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
