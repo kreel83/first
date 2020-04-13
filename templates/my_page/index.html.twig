@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MyPageController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">
+    <h1 class="mb-5">Mes lectures</h1>
+    <h2>Ma wish-list</h2>
+    <div class="card-container d-flex">
+        {%  for lecture in lecturesWL %}
+            <div class="card d-block w-25 m-4 text-center card-livre-mapage"  data-statut="wl" data-id="{{ lecture.id }}">
+                <div class="card-hearder">
+                    {{ lecture.livre.titre }}
+                </div>
+                <div class="body">
+                    <img src={{ lecture.livre.imageurl }} alt="" width="125">
+                </div>
+                <div class="card-footer">
+                    {{ lecture.livre.auteur.nom }}
+                </div>
+            </div>
+
+        {%  endfor %}
+    </div>
+
+    <h2>Lecture actuelle</h2>
+    <div class="card-container d-flex">
+        {%  for lecture in lecturesLA %}
+            <div class="card d-block w-25 m-4 text-center card-livre-mapage" data-statut="la" data-id="{{ lecture.id }}">
+                <div class="card-hearder">
+                    {{ lecture.livre.titre }}
+                </div>
+                <div class="body">
+                    <img src={{ lecture.livre.imageurl }} alt="" width="125">
+                </div>
+                <div class="card-footer">
+                    {{ lecture.livre.auteur.nom }}
+                </div>
+            </div>
+
+        {%  endfor %}
+    </div>
+
+    <h2>Mes derniers livres lus</h2>
+    <div class="card-container d-flex">
+        {%  for lecture in lecturesAR %}
+            <div class="card d-block w-25 m-4 text-center card-livre-mapage" data-statut="la" data-id="{{ lecture.id }}">
+                <div class="card-hearder">
+                    {{ lecture.livre.titre }}
+                </div>
+                <div class="body">
+                    <img src={{ lecture.livre.imageurl }} alt="" width="125">
+                </div>
+                <div class="card-footer">
+                    {{ lecture.livre.auteur.nom }}
+                    {{ lecture.debutLecture | date("m/Y") }}
+                </div>
+            </div>
+
+        {%  endfor %}
+    </div>
+
+
+
+</div>
+
+
+
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="wl_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/mapage/changeStatut" method="post">
+                        <input type="hidden" id="wl_id" name="wl_id">
+                        <input type="hidden" id="wl_statut" name="wl_statut" value="wl">
+                        <button class="btn btn-danger d-block w-100" type="submit" name="submit" value="supp">Supprimer</button>
+                        <button class="btn btn-primary d-block w-100" type="submit" name="submit" value="to_la">Ajouter aux lectures actuelles</button>
+
+
+                    </form>
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

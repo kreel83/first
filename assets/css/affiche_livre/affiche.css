@@ -1,0 +1,25 @@
+.action {
+    width: 100%;
+    height: auto;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.action div{
+    width: 20%;
+    padding: 8px;
+    background-color: white;
+    color: dimgrey;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin: 8px;
+    text-align: center;
+
+}
+
+.action div:hover {
+    background-color: dimgrey;
+    color: white;
+}

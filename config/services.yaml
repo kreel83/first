@@ -6,6 +6,7 @@
 parameters:
     marc_googlebooks.google_api_key: AIzaSyD6eGVbzOmMiwoP9UivZ5pI1gnhyAz-n3s
 services:
+
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

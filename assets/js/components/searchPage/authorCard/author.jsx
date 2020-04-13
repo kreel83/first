@@ -1,11 +1,11 @@
 import React, {useState} from 'React';
-import Modal from './modal';
+
 
 export default class Author extends React.Component{
     constructor(props) {
         super(props)
         this.details = props.details
-        this.state = { isOpen: false };
+        this.state = { isOpen: true };
     }
 
     componentWillMount() {
@@ -14,33 +14,47 @@ export default class Author extends React.Component{
         }
     }
 
-
-    toggleModal = () => {
-        console.log("modal")
-        this.setState({
-            isOpen: !this.state.isOpen
-        });
-
+    handleClick = () => {
+        console.log('click')
+        const link = this.props.details.titre
+        let slug = '/display/'+link
+        slug = slug.split(' ').join('-')
+        window.location = slug
     }
 
-    lanceModal = () => { console.log('lance')
+    addBook = () => {
+       $(".les_livres").empty()
+
+        $.post({
+            url: '/google/listeLivres',
+            dataType: 'json',
+            data: "link=" + this.props.details.link,
+            success: (data) => {
+                console.log(data)
+                const d = data.link
+                for (let i=0; i<d.length; i++) {
+                    //console.log(data.link[i][0])
+                    let data = ""
+                    if (d[i][1].includes('livre')) {
+                        data = `<div onclick="this.handleClick()" class="card" style="cursor:pointer;margin:8px;width: 150px;padding: 16px;height: 200px">${d[i][0]}</div>`
+                    }
+                    $(".les_livres").append(data)
+                }
+            }
+        })
 
     }
 
 
 
     render() {
-        return (<div className="card card_livre bookCard" data-slug="{ this.props.details.titre }" data-toggle="modal" data-target=".exampleModal">
+        return (<div className="card author_card" onClick={this.addBook} hidden={!this.state.isOpen} >
             <div className="card-body d-flex justify-content-center">
                 <img src={ this.props.details.photo } alt="" width="125"  />
             </div>
             <div className="card-footer">
                 {this.props.details.nom}
             </div>
-            <Modal show={this.state.isOpen}
-                   onClose={this.toggleModal}>
-                Here's some content for the modal
-            </Modal>
         </div>)
     }
 }

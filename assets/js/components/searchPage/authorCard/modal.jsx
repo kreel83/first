@@ -2,16 +2,34 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class Modal extends React.Component {
+
+    componentDidMount() {
+        $.post({
+            url: '/google/listeLivres',
+            dataType: 'json',
+            data: "link=" + link,
+            success: (data) => {
+                console.log(data)
+                const d = data.link
+                for (let i=0; i<d.length; i++) {
+                    //console.log(data.link[i][0])
+                    let data = ""
+                    if (d[i][1].includes('livre')) {
+                        data = `<li><a href="${ d[i][1].replace('/biblio','').replace('.html','') }">${d[i][0]}</a></li>`
+                    } else {
+                        data = `<h5>${d[i][0]}</h5>`
+                    }
+                    $('.body-livres').append(data)
+                }
+            }
+        })
+    }
+
+
+
     render() {
 
-        // Render nothing if the "show" prop is false
-        if(!this.props.show) {
-            return null;
-        }
-
-        // The gray background
-
-        console.log(this.props.show)
+       console.log(this.props.show)
         return (
             <div className="modal fade exampleModal" tabIndex="-1" role="dialog"
                  aria-labelledby="exampleModalLabel" aria-hidden="true">

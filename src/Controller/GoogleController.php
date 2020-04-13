@@ -3,6 +3,11 @@
 namespace App\Controller;
 
 
+use App\Entity\Auteur;
+use App\Entity\Categorie;
+use App\Entity\Livre;
+use App\Repository\LivreRepository;
+use Doctrine\ORM\Repository\RepositoryFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,11 +55,14 @@ class GoogleController extends AbstractController
      * @return Response
      */
     public function listeLivre(Request $request) {
+
         $url =  "https://livraddict.com".$request->request->get('link');
         $client = new Client();
         $crawler = $client->request('GET', $url);
         $r = $crawler->filter('#bookAuthor>tbody>tr>td')->filter("a")->extract(array("_text","href"));
+
         return new Response(json_encode([
+
             'link' => $r
         ]));
     }
@@ -73,7 +81,7 @@ class GoogleController extends AbstractController
         $crawler = $client->request('GET', $url);
         $rr = $crawler->filter('.listing_recherche>li');
         $r['lien'] = $rr->filter('div>a')->extract(array('href'));
-        $r['photo'] = $rr->filter('div>a>img')->extract(array('src'));
+        $r['imageurl'] = $rr->filter('div>a>img')->extract(array('src'));
         $r['auteur'] = $rr->filter('.item_infos>p>a')->extract("_text");
         $r['genre'] = $rr->filter('.item_infos>.genre')->extract("_text");
 
@@ -82,18 +90,18 @@ class GoogleController extends AbstractController
         for ($i = 0; $i < $nb; $i++) {
             $books[$i]['titre'] = str_replace('-',' ',str_replace('.html','',explode('/',$r['lien'][$i])[3]));
             $books[$i]['lien'] = $r['lien'][$i];
-            $books[$i]['photo'] = $r['photo'][$i];
+            $books[$i]['imageurl'] = $r['imageurl'][$i];
             $books[$i]['auteur'] = $r['auteur'][$i];
             $books[$i]['genre'] = $r['genre'][$i];
         }
 
         $authors = [];
         $auth = $crawler->filter('#tab_auteurs>ul');
-        $a['nom'] = $auth->filter("li>a")->extract(array("_text"));
+        $a['auteur'] = $auth->filter("li>a")->extract(array("_text"));
         $a['link'] = $auth->filter("li>a")->extract(array("href"));
-        $nb = sizeof($a['nom']);
+        $nb = sizeof($a['auteur']);
         for ($i = 0; $i < $nb; $i++) {
-            $authors[$i]['nom'] = $a['nom'][$i];
+            $authors[$i]['auteur'] = $a['auteur'][$i];
             $authors[$i]['link'] = $a['link'][$i];
             $url = "https://www.livraddict.com/".$a['link'][$i];
             $c = new Client();
@@ -101,9 +109,34 @@ class GoogleController extends AbstractController
             $authors[$i]['photo'] = $crawler->filter(".profile-userpic>img")->extract(array("src"));
             ($authors[$i]['photo'] == []) ? $authors[$i]['photo'] = "none" : $authors[$i]['photo'] = $authors[$i]['photo'][0];
         }
-        dump( $authors);
         return new Response(json_encode(["books" => $books, "authors" => $authors, "nbBook" => $this->nb($titre)]));
     }
+
+    /**
+     * @Route("/google/searchMyTable", name="searchMyTable")
+     * @param Request $request
+     */
+    public function searchIntoTable(Request $request) {
+        dump('search');
+        $repo = $this->getDoctrine()->getRepository(Livre::class);
+        $aut = $this->getDoctrine()->getRepository(Auteur::class);
+        $livres = $repo->createQueryBuilder('o')->where("o.titre LIKE :titre")->setParameter('titre', '%'.$request->request->get('titre').'%')->getQuery()->getResult();
+        $auteurs = $aut->createQueryBuilder('o')->where("o.nom LIKE :auteur")->setParameter('auteur', '%'.$request->request->get('titre').'%')->getQuery()->getResult();
+        for ($i=0; $i<sizeof($auteurs); $i++) {
+            $auteurs[$i]->photo = "none";
+        }
+        dump($livres);
+        return $this->render('google/livreAddict.html.twig', [
+            'books' => $livres,
+            'authors' => $auteurs,
+            'nblivres' => sizeof($livres),
+            'nbpages' => (int) floor(sizeof($livres)/10) + 1,
+            'requete' => $request->request->get('titre')
+
+        ]);
+    }
+
+
 
     /**
      * @Route("/google/search", name="google_search")
@@ -111,6 +144,7 @@ class GoogleController extends AbstractController
      */
     public function search(Request $request)
     {
+        $cat = $this->getDoctrine()->getRepository(Categorie::class)->findAll();
         $books = [];
         $r = [];
         if (sizeof($request->request) > 0) {
@@ -128,15 +162,18 @@ class GoogleController extends AbstractController
                 $books = $this->recherche($urlParams);
             } else {
                 $books = $this->rechercheLivreaddict($r['titre'], 1);
+
+
                 $nb = $this->nb($r['titre']);
                 $books = json_decode($books->getContent());
-                dump($books);
+dump($books->authors);
                 return $this->render('google/livreAddict.html.twig', [
-                    'books' => json_encode($books->books),
+                    'books' => $books->books,
                     'authors' => $books->authors,
                     'nblivres' => $nb,
                     'nbpages' => (int) floor($nb/10) + 1,
-                    'request' => $r
+                    'cat' => $cat,
+                    'requete' => $r['titre']
                 ]);
             }
         }

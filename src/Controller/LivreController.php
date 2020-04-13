@@ -2,13 +2,23 @@
 
 namespace App\Controller;
 
+use App\Repository\LivreRepository;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Goutte\Client;
 
 class LivreController extends AbstractController
 {
+
+
+
+
+
     /**
      * @Route ("/react/livre/{slug}", name="reactLivre")
      * @param $slug
@@ -73,6 +83,20 @@ class LivreController extends AbstractController
 
 
     /**
+     * @Route("/add/to/{book}/{attr}", name="attribution")
+     * @param $book
+     */
+    public function wishList($book, $attr) {
+        switch ($attr) {
+            case 'wl' : $this->forward('App\Controller\SaveController::AddToWL',["book" => $book]);break;
+            case 'la' : $this->forward('App\Controller\SaveController::AddToLA',["book" => $book]);break;
+        }
+        return $this->redirectToRoute('mapage');
+    }
+
+
+
+    /**
      * @Route ("/display/{slug}", name="displayLivre")
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -83,19 +107,24 @@ class LivreController extends AbstractController
         ]);
     }
 
+
+
+
     /**
      * @Route("/livre/{slug}", name="livre")
      */
     public function index($slug)
     {
+        $slug = strtolower($slug);
         $client = new Client();
         $r = [];
         $url = "https://www.livraddict.com/biblio/livre/".$slug.'.html';
         $crawler = $client->request('GET', $url);
+        dump($url);
         $params = array();
         $params['description'] = $this->treat($crawler->filter('#synopsis')->extract(array("_text")));
-
-        $params['genre'] = $crawler->filter('.sidebar-tags>li')->first()->filter('a')->extract(array("_text"))[0];
+        $params['titre'] = str_replace('-',' ',$slug);
+        $params['categorie'] = $crawler->filter('.sidebar-tags>li')->first()->filter('a')->extract(array("_text"))[0];
         $params['auteur'] = $crawler->filter('.page-title>a')->text();
         $param = $crawler->filter(".editionBlock>.editionBlock_infos>p")->extract(array('_text'));
         $i = -1;
@@ -128,9 +157,12 @@ class LivreController extends AbstractController
 
         }
 
-        return $this->render('livre/index.html.twig', [
+        $save = $this->forward('App\Controller\SaveController::saveWL',[ 'book' => $params]);
+        dump($save->getContent());
+
+        return $this->render('livre/display.html.twig', [
             'controller_name' => 'LivreController',
-            "params" => $params
+            "book" => $params
         ]);
     }
 }
