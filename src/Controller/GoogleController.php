@@ -23,7 +23,29 @@ class GoogleController extends AbstractController
      */
     public function test()
     {
-        return $this->render('accueil.html.twig');
+        $url = "https://www.actualitte.com/flux/rss/categorie/livres.xml";
+        $client = new Client();
+
+        $crawler = $client->request('GET',$url);
+
+
+        $title = $crawler->filter('item>title')->extract(array('_text')[0]);
+        $description = $crawler->filter('item>description')->extract(array('_text',true)[0]);
+        $pubDate = $crawler->filter('item>pubDate')->extract(array('_text',true)[0]);
+        $auteur = $crawler->filter('item>author')->extract(array('_text',true)[0]);
+
+        $items = [];
+        for ($i=0;$i<sizeof($title);$i++) {
+            $it = [];
+            $it['title'] = $title[$i];
+            $it['description'] = $description[$i];
+            $it['pubDate'] = $pubDate[$i];
+            $it['author'] = $auteur[$i];
+            array_push($items,$it);
+        }
+
+dump($description);
+        return $this->render('accueil.html.twig',['items' => $items]);
     }
 
     /**
