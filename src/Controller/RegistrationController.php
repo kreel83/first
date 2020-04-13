@@ -35,7 +35,7 @@ class RegistrationController extends Controller
 
 
             $request->getSession()->getFlashBag()->add('user-valide', 'Vous êtes bien inscrit ! Un email de validation vous a été envoyé.');
-            return $this->redirectToRoute('Login');
+            return $this->redirectToRoute('accueil');
         }
 
         return $this->render(

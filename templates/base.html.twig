@@ -10,26 +10,30 @@
     </head>
     <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="/accueil">Navbar</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav mr-auto">
-
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ asset('google/search') }}">Rechercher</a>
+                    <a class="nav-link" href="{{ asset('/mapage') }}">Ma page</a>
                 </li>
+                {%  endif %}
+
+                <span style="color: white; padding: 8px 24px">|</span>
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <li>
-                    <a class="nav-link" href="{{ asset('/Register') }}">Créer un compte</a>
+                    <a class="nav-link" href="{{ asset('/Logout') }}">Déconnexion</a>
+
                 </li>
+                {% else %}
                 <li>
                     <a class="nav-link" href="{{ asset('/Login') }}">Connexion</a>
                 </li>
-                <li>
-                    <a class="nav-link" href="{{ asset('/Logout') }}">Déconnexion</a>
-                </li>
+                {%  endif %}
 
             </ul>
             <form action="/google/searchMyTable" method="post" class="form-inline my-2 my-lg-0">
